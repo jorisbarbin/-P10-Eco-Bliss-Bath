@@ -33,9 +33,7 @@ describe("API - Authentification", () => {
         url: "/login",
         body: users.validUser,
       }).then((response) => {
-
         expect(response.status).to.equal(200);
-
         expect(response.body).to.have.property("token");
         expect(response.body.token).to.be.a("string");
         expect(response.body.token).to.not.be.empty;
