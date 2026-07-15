@@ -42,4 +42,20 @@ describe("API - Authentification", () => {
 
     });
   });
+  it("Refuse la connexion avec des identifiants invalides", () => {
+    cy.fixture("users").then((users) => {
+
+      cy.request({
+        method: "POST",
+        url: "/login",
+        body: users.invalidUser,
+        failOnStatusCode: false
+      }).then((response) => {
+
+        expect(response.status).to.equal(401);
+
+      });
+
+    });
+  });
 });
