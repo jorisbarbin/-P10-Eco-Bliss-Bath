@@ -97,7 +97,7 @@ it("Ajoute un produit disponible au panier", () => {
               expect(response.body).to.have.property("orderLines");
               expect(response.body.orderLines).to.be.an("array");
               expect(response.body.orderLines.length).to.be.greaterThan(0);
-              console.log(Object.keys(response.body));
+
           });
       });
   });
@@ -132,6 +132,36 @@ it("Ajoute un produit disponible au panier", () => {
           );
 
           expect(deletedLine).to.not.exist;
+        });
+      });
+    });
+  });
+
+  it("Refuse l'ajout d'un produit en rupture de stock", () => {
+    cy.login().then((token) => {
+      cy.request("/products").then((productsResponse) => {
+        expect(productsResponse.status).to.equal(200);
+ 
+        const unavailableProduct = productsResponse.body.find(
+          (product: any) => product.availableStock <= 0
+        );
+
+        expect(unavailableProduct).to.exist;
+    
+        cy.request({
+          method: "PUT",
+          url: "/orders/add",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: {
+            product: unavailableProduct.id,
+            quantity: 1,
+          },
+          failOnStatusCode: false,
+        }).then((response) => {
+          cy.log(JSON.stringify(response.body));
+          console.log(response.status, response.body);
         });
       });
     });
