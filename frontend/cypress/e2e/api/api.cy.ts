@@ -167,4 +167,54 @@ it("Ajoute un produit disponible au panier", () => {
     });
   });
 
+  it("Récupère la fiche d'un produit", () => {
+
+    cy.request("/products").then((productsResponse) => {
+
+      expect(productsResponse.status).to.equal(200);
+
+      const productId = productsResponse.body[0].id;
+
+      cy.request(`/products/${productId}`).then((response) => {
+
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property("id", productId);
+        expect(response.body).to.have.property("name");
+        expect(response.body).to.have.property("description");
+        expect(response.body).to.have.property("price");
+        expect(response.body).to.have.property("availableStock");
+      });
+    });
+  });
+
+  it("Crée un nouvel avis", () => {
+
+    cy.login().then((token) => {
+
+      cy.request({
+        method: "POST",
+        url: "/reviews",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: {
+          title: "Excellent produit",
+          comment: "Avis créé automatiquement avec Cypress",
+          rating: 5,
+        },
+      }).then((response) => {
+
+        expect(response.status).to.equal(200);
+
+        expect(response.body).to.have.property("id");
+        expect(response.body).to.have.property("title", "Excellent produit");
+        expect(response.body).to.have.property("comment");
+        expect(response.body).to.have.property("rating", 5);
+
+      });
+
+    });
+
+  });
+
 });
