@@ -28,9 +28,7 @@ describe("Fonctionnel - Panier", () => {
                 .click();
 
             cy.get('[data-cy="detail-product-add"]')
-                .should("be.visible");
-
-            cy.get('[data-cy="detail-product-add"]')
+                .should("be.visible")
                 .click();
 
             cy.get('[data-cy="nav-link-cart"]')
@@ -40,6 +38,32 @@ describe("Fonctionnel - Panier", () => {
 
             cy.get('[data-cy="cart-line-name"]')
                 .should("have.length.greaterThan", 0);
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .invoke("val", "1")
+                .trigger("input");
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .should("have.value", "1");
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .type("{downarrow}");
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .should("have.value", "1");
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .invoke("val", "20")
+                .trigger("input");
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .should("have.value", "20");
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .type("{uparrow}");
+
+            cy.get('[data-cy="cart-line-quantity"]')
+                .should("have.value", "20");
 
         });
 

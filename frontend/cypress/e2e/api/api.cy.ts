@@ -1,7 +1,7 @@
 describe("API - Authentification", () => {
 
   it("Refuse l'accès au panier lorsqu'un utilisateur n'est pas connecté", () => {
-
+ 
     cy.request({
       method: "GET",
       url: "/orders",
