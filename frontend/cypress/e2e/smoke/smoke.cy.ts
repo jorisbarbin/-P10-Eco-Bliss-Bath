@@ -13,7 +13,7 @@ describe("Smoke tests - Eco Bliss Bath", () => {
     it("Affiche un bouton d'ajout au panier pour un utilisateur connecté", () => {
         cy.fixture("users").then((users) => {
             cy.visit("http://localhost:4200/#/login");
-            
+
             cy.get('[data-cy="login-input-username"]')
                 .type(users.validUser.username);
             cy.get('input[type="password"]')
