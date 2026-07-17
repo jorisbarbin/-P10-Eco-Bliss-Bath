@@ -58,48 +58,48 @@ describe("API - Authentification", () => {
     });
   });
 
-it("Ajoute un produit disponible au panier", () => {
+  it("Ajoute un produit disponible au panier", () => {
 
-      cy.login().then((token) => {
-          cy.request("/products").then((productsResponse) => {
-              const product = productsResponse.body.find(
-                  (p: any) => p.availableStock > 0
-              );
-              expect(product).to.exist;
-              cy.request({
-                  method: "PUT",
-                  url: "/orders/add",
-                  headers: {
-                      Authorization: `Bearer ${token}`,
-                  },
-                  body: {
-                      product: product.id,
-                      quantity: 1,
-                  },
-              }).then((response) => {
-                  expect(response.status).to.equal(200);
-              });
-          });
+    cy.login().then((token) => {
+      cy.request("/products").then((productsResponse) => {
+        const product = productsResponse.body.find(
+          (p: any) => p.availableStock > 0
+        );
+        expect(product).to.exist;
+        cy.request({
+          method: "PUT",
+          url: "/orders/add",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: {
+            product: product.id,
+            quantity: 1,
+          },
+        }).then((response) => {
+          expect(response.status).to.equal(200);
+        });
       });
+    });
   });
 
   it("Retrouve le produit ajouté dans le panier", () => {
 
-      cy.login().then((token) => {
-          cy.request({
-              method: "GET",
-              url: "/orders",
-              headers: {
-                  Authorization: `Bearer ${token}`,
-              },
-          }).then((response) => {
-              expect(response.status).to.equal(200);
-              expect(response.body).to.have.property("orderLines");
-              expect(response.body.orderLines).to.be.an("array");
-              expect(response.body.orderLines.length).to.be.greaterThan(0);
+    cy.login().then((token) => {
+      cy.request({
+        method: "GET",
+        url: "/orders",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((response) => {
+        expect(response.status).to.equal(200);
+        expect(response.body).to.have.property("orderLines");
+        expect(response.body.orderLines).to.be.an("array");
+        expect(response.body.orderLines.length).to.be.greaterThan(0);
 
-          });
       });
+    });
   });
 
   it("Supprime un produit du panier", () => {
@@ -114,7 +114,7 @@ it("Ajoute un produit disponible au panier", () => {
         expect(orderResponse.status).to.equal(200);
         expect(orderResponse.body.orderLines).to.be.an("array");
         expect(orderResponse.body.orderLines.length).to.be.greaterThan(0);
- 
+
         const lineId = orderResponse.body.orderLines[0].id;
 
         cy.request({
@@ -126,7 +126,7 @@ it("Ajoute un produit disponible au panier", () => {
         }).then((deleteResponse) => {
           expect(deleteResponse.status).to.equal(200);
           expect(deleteResponse.body.orderLines).to.be.an("array");
- 
+
           const deletedLine = deleteResponse.body.orderLines.find(
             (line: any) => line.id === lineId
           );
@@ -141,13 +141,13 @@ it("Ajoute un produit disponible au panier", () => {
     cy.login().then((token) => {
       cy.request("/products").then((productsResponse) => {
         expect(productsResponse.status).to.equal(200);
- 
+
         const unavailableProduct = productsResponse.body.find(
           (product: any) => product.availableStock <= 0
         );
 
         expect(unavailableProduct).to.exist;
-    
+
         cy.request({
           method: "PUT",
           url: "/orders/add",
@@ -210,11 +210,8 @@ it("Ajoute un produit disponible au panier", () => {
         expect(response.body).to.have.property("title", "Excellent produit");
         expect(response.body).to.have.property("comment");
         expect(response.body).to.have.property("rating", 5);
-
       });
-
     });
-
   });
 
 });
